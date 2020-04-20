@@ -8,22 +8,42 @@
       <el-button type="info" @click="signOut">退出</el-button>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside :width="isToggle ? '64px' : '200px'">
+        <div class="toggle-button" @click="toggle">|||</div>
         <el-menu
-          background-color="#545c64"
+          background-color="#333744"
           text-color="#fff"
-          active-text-color="#ffd04b"
+          active-text-color="#3d8adc"
+          unique-opened
+          :collapse="isToggle"
+          :collapse-transition="false"
+          router
+          :default-active="activePath"
         >
-          <el-submenu index="1">
+          <el-submenu :index="item.id + ''" 
+                      v-for="item in menuList" 
+                      :key="item.id">
             <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>导航一</span>
+              <i :class="iconObj[item.id]"></i>
+              <span>{{item.authName}}</span>
             </template>
-            <el-menu-item index="1-1">选项1</el-menu-item>
+
+            <!-- 二级菜单 -->
+            <el-menu-item :index="'/' + subItem.path" 
+                          v-for="subItem in item.children" 
+                          :key="subItem.id"
+                          @click="keepActivePath('/' + subItem.path)">
+              <template slot="title">
+                <i class="el-icon-menu"></i>
+                <span>{{subItem.authName}}</span>
+              </template>
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main>Main</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -34,7 +54,16 @@ export default {
   components: {},
   data() {
     return {
-      menuList: []
+      menuList: [],
+      iconObj: {
+        '125': 'iconfont icon-users',
+        '103': 'iconfont icon-tijikongjian',
+        '101': 'iconfont icon-shangpin',
+        '102': 'iconfont icon-danju',
+        '145': 'iconfont icon-baobiao',
+      },
+      isToggle: false,
+      activePath: ''
     }
   },
   methods: {
@@ -46,12 +75,20 @@ export default {
     async getMenuList() {
       const { data: res} = await this.$http.get('menus')
       if(res.meta.status !==200) return this.$message.error('res.meta.message')
-      console.log(res);
-      
+      console.log(res.data);
+      this.menuList = res.data
+    },
+    toggle() {
+      this.isToggle = !this.isToggle
+    },
+    keepActivePath(path) {
+      window.sessionStorage.setItem('path', path)
+      this.activePath = path
     }
   },
   created() {
     this.getMenuList() 
+    this.activePath = window.sessionStorage.getItem('path')
   },
 }
 </script>
@@ -78,8 +115,22 @@ export default {
 }
 .el-aside {
   background-color: #333744;
+  .el-menu {
+    border-right: none;
+  }
+  .toggle-button {
+    background-color: #4a5064;
+    font-size: 12px;
+    text-align: center;
+    line-height: 24px;
+    color: #fff;
+    letter-spacing: 0.2em;
+  }
 }
 .el-main {
   background-color: #eaedf1;
+}
+.iconfont {
+  margin-right: 6px;
 }
 </style>

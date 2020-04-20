@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 const Login = () => import('views/login/Login')
 const Home = () => import('views/home/Home')
+const Welcome = () => import('views/home/childComps/Welcome')
+const User = () => import('components/users/User')
 
 Vue.use(VueRouter)
 
@@ -17,7 +19,18 @@ Vue.use(VueRouter)
   },
   {
     path: '/home',
-    component: Home
+    component: Home,
+    redirect: '/welcome',
+    children: [
+      {
+        path: '/welcome',
+        component: Welcome
+      },
+      {
+        path: '/users',
+        component: User
+      }
+    ]
   }
 ]
 
@@ -26,6 +39,7 @@ const router = new VueRouter({
   mode: 'history'
 })
 
+// 路由守卫
 router.beforeEach((to, from, next) => {
   // 判断前往页面是否为login
   if(to.path === '/login') return next();
