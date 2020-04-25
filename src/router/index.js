@@ -5,6 +5,12 @@ const Login = () => import('views/login/Login')
 const Home = () => import('views/home/Home')
 const Welcome = () => import('views/home/childComps/Welcome')
 const User = () => import('components/users/User')
+const Right =() =>import('components/power/Right')
+const Role =() =>import('components/power/Role')
+const Category =() => import('components/goods/Category')
+const Params =() => import('components/goods/Params')
+const GoodsList =() => import('components/goods/List')
+const Add =() => import('components/goods/Add')
 
 Vue.use(VueRouter)
 
@@ -29,6 +35,30 @@ Vue.use(VueRouter)
       {
         path: '/users',
         component: User
+      },
+      {
+        path: '/rights',
+        component: Right
+      },
+      {
+        path: '/roles',
+        component: Role
+      },
+      {
+        path: '/categories',
+        component: Category
+      },
+      {
+        path: '/params',
+        component: Params
+      },
+      {
+        path: '/goods',
+        component: GoodsList
+      },
+      {
+        path: '/goods/add',
+        component: Add
       }
     ]
   }

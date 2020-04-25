@@ -75,7 +75,7 @@ export default {
     async getMenuList() {
       const { data: res} = await this.$http.get('menus')
       if(res.meta.status !==200) return this.$message.error('res.meta.message')
-      console.log(res.data);
+      // console.log(res.data);
       this.menuList = res.data
     },
     toggle() {
